@@ -20,7 +20,7 @@
   align-items: center;
   justify-content: center;
   perspective: 60px;
-  animation: zooming 10s ease-in-out infinite;
+  animation: zooming 8s ease-in-out infinite;
 }
 
 .frame {
@@ -116,6 +116,36 @@
 .frame:nth-child(14) {
   transform: rotate(40deg) translateY(260px) translateZ(-130px);
   opacity: 0.3;
+  animation-delay: 2.7s;
+}
+
+.frame:nth-child(15) {
+  transform: rotate(40deg) translateY(280px) translateZ(-140px);
+  opacity: 0.25;
+  animation-delay: 2.7s;
+}
+
+.frame:nth-child(16) {
+  transform: rotate(40deg) translateY(300px) translateZ(-150px);
+  opacity: 0.2;
+  animation-delay: 2.7s;
+}
+
+.frame:nth-child(17) {
+  transform: rotate(40deg) translateY(320px) translateZ(-160px);
+  opacity: 0.15;
+  animation-delay: 2.7s;
+}
+
+.frame:nth-child(18) {
+  transform: rotate(40deg) translateY(340px) translateZ(-180px);
+  opacity: 0.1;
+  animation-delay: 2.7s;
+}
+
+.frame:nth-child(19) {
+  transform: rotate(40deg) translateY(360px) translateZ(-200px);
+  opacity: 0.5;
   animation-delay: 2.7s;
 }
 

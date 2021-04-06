@@ -1,6 +1,6 @@
 :root {
-  --shadow1: #dadada;
-  --shadow2: #ffffff;
+  --shadow1: #3c2d80;
+  --shadow2: rgba(38, 55, 129, 0.664);
 }
 
 .pinGeneratorContainer {
@@ -8,9 +8,13 @@
   width: 430px;
   min-height: 500px;
   padding: 60px 35px 35px 35px;
-  border-radius: 40px;
-  background-color: #edf0f1;
-  box-shadow: 13px 13px 20px var(--shadow1), -13px -13px 20px var(--shadow2);
+  border-radius: 30px;
+  background: linear-gradient(
+    to right bottom,
+    rgba(67, 42, 211, 0.3),
+    rgba(6, 74, 163, 0.3)
+  );
+  backdrop-filter: blur(15px);
   position: relative;
   z-index: 2;
 }
@@ -22,8 +26,8 @@
   background-size: contain;
   margin: 0 auto;
   border-radius: 2px;
-  box-shadow: 0px 0px 2px #5f5f5f, 0px 0px 0px 5px #ecf0f3, 8px 8px 15px #a7aaaf,
-    -8px -8px 15px #ffffff;
+  box-shadow: 0px 0px 2px #7b4d99, 0px 0px 0px 5px #2d58b4, 8px 8px 15px #7b4d99,
+    -8px -8px 15px #2d58b4;
 }
 
 .title {
@@ -31,11 +35,13 @@
   font-size: 24px;
   padding-top: 24px;
   letter-spacing: 0.5px;
+  color: #fff;
 }
 
 .explanation {
   font-size: 14px;
   padding: 20px 10px 10px 5px;
+  color: #fff;
 }
 
 .inputFields {
@@ -54,8 +60,13 @@
   outline: none;
   background: none;
   font-size: 20px;
-  color: #555;
+  color: rgb(255, 255, 255);
   padding: 20px 10px 20px 5px;
+}
+
+::placeholder {
+  color: rgb(255, 255, 255);
+  opacity: 0.4;
 }
 
 .username {
@@ -78,13 +89,12 @@
   font-weight: 700;
   color: rgb(255, 255, 255);
   text-align: center;
-  background-color: rgb(81, 133, 206);
+  background-color: rgba(17, 231, 63, 0.705);
   transition: all 0.1s ease-in;
-  box-shadow: 3px 3px 8px var(--shadow1), -3px -3px 8px var(--shadow2);
 }
 
 .button:hover {
-  background-color: #535357;
+  background-color: #dd34ff;
 }
 
 .button:active {

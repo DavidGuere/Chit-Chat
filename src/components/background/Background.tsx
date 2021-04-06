@@ -20,6 +20,11 @@ export default function Background() {
         <div className="frame"></div>
         <div className="frame"></div>
         <div className="frame"></div>
+        <div className="frame"></div>
+        <div className="frame"></div>
+        <div className="frame"></div>
+        <div className="frame"></div>
+        <div className="frame"></div>
       </div>
     </div>
   );

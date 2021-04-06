@@ -1,6 +1,6 @@
 import React from "react";
 import Background from "./components/background/Background";
-import View from "./components/view/View.js";
+import Controller from "./components/Controller/Controller";
 import "./App.css";
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
         <Background />
       </div>
       <div id="content">
-        <View />
+        <Controller />
       </div>
     </>
   );
