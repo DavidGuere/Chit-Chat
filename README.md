@@ -47,7 +47,7 @@ To run the project you will need Node installed on your computer.
 
 ## About the project
 
-This web application is the frontend of a future project. The chat application is designed using an MVC design patter and a glass UI design.
+This web application is the frontend of a future project. The chat application is designed using an MVC design pattern and a glass UI design.
 
 ## Technologies
 
@@ -55,7 +55,8 @@ This web application is the frontend of a future project. The chat application i
 - React: An open-source, front end, JavaScript library for building user interfaces or UI components.
 - HTML: Hypertext Markup Language is the standard markup language for documents designed to be displayed in a web browser.
 - CSS: A style sheet language used for describing the presentation of a document written in HTML.
-  -TypeScript: A strict syntactical superset of JavaScript.
+
+- TypeScript: A strict syntactical superset of JavaScript.
 
 ## Usage
 
