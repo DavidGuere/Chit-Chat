@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import React, { useState, useRef } from "react";
+import { Switch, Route, useHistory } from "react-router-dom";
 import View from "../view/View";
 import Chat from "../view/Chat";
 import generatePinAsString from "../util/GeneratePinAsString";
@@ -8,6 +8,7 @@ export default function Controller() {
   const [newPin, setNewPin] = useState<string>();
   const usernameRef = useRef<HTMLInputElement>(null);
   const roomIDRef = useRef<HTMLInputElement>(null);
+  const history = useHistory();
 
   const pinGenerator = generatePinAsString;
 
@@ -18,25 +19,27 @@ export default function Controller() {
 
         setNewPin(pin);
 
-        console.log(newPin);
+        history.push("/chat");
+      } else {
+        alert("Enter a nickname :)");
       }
     }
   }
 
   return (
     <>
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <View
-              generatePinFunc={generatePin}
-              usernameRef={usernameRef}
-              roomIDRef={roomIDRef}
-            />
-          </Route>
-          <Route path="/chat" component={Chat} />
-        </Switch>
-      </Router>
+      <Switch>
+        <Route exact path="/">
+          <View
+            generatePinFunc={generatePin}
+            usernameRef={usernameRef}
+            roomIDRef={roomIDRef}
+          />
+        </Route>
+        <Route path="/chat">
+          <Chat />
+        </Route>
+      </Switch>
     </>
   );
 }

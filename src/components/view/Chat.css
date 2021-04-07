@@ -1,0 +1,22 @@
+.glass {
+  background: linear-gradient(
+    to right bottom,
+    rgba(67, 42, 211, 0.3),
+    rgba(6, 74, 163, 0.3)
+  );
+  min-height: 700px;
+  min-width: 1000px;
+  border-radius: 30px;
+  backdrop-filter: blur(15px);
+}
+
+@media (max-width: 500px) {
+  .glass {
+    min-width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-bottom: 0;
+    padding-top: 0;
+    border-radius: 0;
+  }
+}

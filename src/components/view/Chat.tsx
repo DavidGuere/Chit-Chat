@@ -1,5 +1,14 @@
 import React from "react";
+import "./Chat.css";
 
-export default function Chat() {
-  return <div>hello :O</div>;
-}
+const Chat = () => {
+  return (
+    <>
+      <section className="glass">
+        <div className="dashboard"></div>
+      </section>
+    </>
+  );
+};
+
+export default Chat;
