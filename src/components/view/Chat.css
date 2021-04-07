@@ -1,13 +1,128 @@
 .glass {
-  background: linear-gradient(
-    to right bottom,
-    rgba(67, 42, 211, 0.3),
-    rgba(6, 74, 163, 0.3)
-  );
+  background: rgba(146, 123, 211, 0.5);
   min-height: 700px;
   min-width: 1000px;
   border-radius: 30px;
   backdrop-filter: blur(15px);
+  display: flex;
+}
+
+.dashboard {
+  flex: 1;
+  background: rgba(10, 5, 82, 0.527);
+  border-radius: 30px;
+  padding: 0 20px;
+  max-width: 260px;
+}
+
+.userLogo {
+  background-image: url("https://img.favpng.com/2/24/14/emoji-emoticon-flirting-smirk-sticker-png-favpng-rsje69gWRTNejYyhnjGXTw9xE.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  margin-top: 100px;
+  border-radius: 50px;
+  box-shadow: 8px 8px 8px var(--shadow2), -8px 2px 8px var(--shadow1),
+    0px 0px 2px black, 0px 0px 15px var(--shadow1);
+}
+
+.nickname {
+  margin-top: 10px;
+  color: #fff;
+  text-align: center;
+  font-size: 24px;
+}
+
+.roomDescription {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 7px;
+}
+
+.explanationDashboard {
+  font-size: 14px;
+  text-align: center;
+  padding: 0px 10px 10px 5px;
+  color: #fff;
+  margin-bottom: 100px;
+}
+
+.chatSection {
+  flex: 2.5;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages {
+  width: 100%;
+  height: 100%;
+  padding: 20px 0px;
+  display: flex;
+  flex-direction: column-reverse;
+  box-sizing: border-box;
+}
+
+.message {
+  max-width: 90%;
+  margin-top: 10px;
+  border-radius: 10px;
+  background-color: rgba(100, 100, 100, 0.185);
+  backdrop-filter: blur(15px);
+}
+
+.user {
+  margin: 5px;
+  color: rgb(101, 18, 235);
+}
+
+.text {
+  margin: 5px;
+  color: rgb(255, 255, 255);
+  max-width: 100%;
+  word-break: break-all;
+}
+
+.local {
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+}
+
+.textArea {
+  display: flex;
+  padding: 10px;
+  background: rgba(10, 5, 82, 0.527);
+  border-radius: 10px;
+  max-width: 100%;
+  height: 150px;
+}
+
+.inputFieldsTextArea {
+  width: 100%;
+}
+
+.usernameTextArea {
+  height: 100%;
+  margin: 0;
+  box-shadow: inset 8px 8px 8px rgba(10, 5, 82, 0.527),
+    inset -8px -8px 8px rgba(26, 22, 83, 0.527);
+}
+
+.buttonTextArea {
+  height: 100%;
+  width: 100px;
+}
+
+.userInputTextArea {
+  font-size: 15px;
+  max-height: 100%;
+  margin: 10px 20px;
+  resize: none;
+  padding: 0;
 }
 
 @media (max-width: 500px) {

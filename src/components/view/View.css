@@ -19,14 +19,14 @@
 }
 
 .logo {
-  background-image: url("https://pbs.twimg.com/profile_images/378800000846307685/ebcd10329de73c7191934772824cca4c.png");
+  background-image: url("https://www.pinclipart.com/picdir/middle/126-1262958_ahmad-ghozali-on-twitter-chit-chat-clip-art.png");
   width: 100px;
   height: 100px;
   background-size: contain;
   margin: 0 auto;
-  border-radius: 2px;
-  box-shadow: 0px 0px 2px #7b4d99, 0px 0px 0px 5px #2d58b4, 8px 8px 15px #7b4d99,
-    -8px -8px 15px #2d58b4;
+  border-radius: 50px;
+  box-shadow: 8px 8px 8px var(--shadow2), -8px 2px 8px var(--shadow1),
+    0px 0px 2px black, 0px 0px 15px var(--shadow1);
 }
 
 .title {

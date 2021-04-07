@@ -5,10 +5,11 @@ import Chat from "../view/Chat";
 import generatePinAsString from "../util/GeneratePinAsString";
 
 export default function Controller() {
-  const [newPin, setNewPin] = useState<string>();
+  const [newPin, setNewPin] = useState<string>("");
   const usernameRef = useRef<HTMLInputElement>(null);
   const roomIDRef = useRef<HTMLInputElement>(null);
   const history = useHistory();
+  var nickname: string = "";
 
   const pinGenerator = generatePinAsString;
 
@@ -26,6 +27,10 @@ export default function Controller() {
     }
   }
 
+  if (usernameRef.current && usernameRef) {
+    nickname = usernameRef.current.value;
+  }
+
   return (
     <>
       <Switch>
@@ -37,7 +42,7 @@ export default function Controller() {
           />
         </Route>
         <Route path="/chat">
-          <Chat />
+          <Chat username={nickname} newPin={newPin} />
         </Route>
       </Switch>
     </>
