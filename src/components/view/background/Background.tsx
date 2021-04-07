@@ -2,7 +2,8 @@ import React from "react";
 
 import "./Background.css";
 
-export default function Background() {
+// export default function Background() {
+const Background: React.FC = () => {
   return (
     <div className="cover">
       <div className="container">
@@ -28,4 +29,6 @@ export default function Background() {
       </div>
     </div>
   );
-}
+};
+
+export default Background;
