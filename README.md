@@ -19,7 +19,7 @@ This is the frontend of a chat application.
 
 ## Getting Started
 
-If you do not wish to download any file, you can visit https://davidguere.github.io/chit-chat/ to check the website.
+If you do not wish to download any file, you can visit https://davidguere.github.io/Chit-Chat/ to check the website.
 
 ### Prerequisites
 
