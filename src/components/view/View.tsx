@@ -7,8 +7,9 @@ interface IViewProps {
   roomIDRef: any;
 }
 
-export default function View(prop: IViewProps) {
-  // const View: React.FC<IViewProps> = (prop) => {
+// export default function View() {
+const View: React.FC<IViewProps> = (prop) => {
+  //
   const { generatePinFunc, usernameRef, roomIDRef } = prop;
 
   return (
@@ -61,6 +62,6 @@ export default function View(prop: IViewProps) {
       </div>
     </>
   );
-}
+};
 
-// export default View;
+export default View;

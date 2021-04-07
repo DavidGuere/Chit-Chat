@@ -4,7 +4,8 @@ import View from "../view/View";
 import Chat from "../view/Chat";
 import generatePinAsString from "../util/GeneratePinAsString";
 
-export default function Controller() {
+// export default function Controller() {
+const Controller: React.FC = () => {
   const [newPin, setNewPin] = useState<string>("");
   const usernameRef = useRef<HTMLInputElement>(null);
   const roomIDRef = useRef<HTMLInputElement>(null);
@@ -20,7 +21,7 @@ export default function Controller() {
 
         setNewPin(pin);
 
-        history.push("/chat");
+        history.push("/Chit-Chat/chat");
       } else {
         alert("Enter a nickname :)");
       }
@@ -34,17 +35,19 @@ export default function Controller() {
   return (
     <>
       <Switch>
-        <Route exact path="/">
+        <Route exact path="/Chit-Chat">
           <View
             generatePinFunc={generatePin}
             usernameRef={usernameRef}
             roomIDRef={roomIDRef}
           />
         </Route>
-        <Route path="/chat">
+        <Route path="/Chit-Chat/chat">
           <Chat username={nickname} newPin={newPin} />
         </Route>
       </Switch>
     </>
   );
-}
+};
+
+export default Controller;
