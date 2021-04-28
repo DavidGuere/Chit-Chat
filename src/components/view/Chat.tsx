@@ -4,10 +4,11 @@ import "./Chat.css";
 interface IChatProps {
   username: string;
   newPin: string;
+  sendMessage: () => any;
 }
 
 const Chat: React.FC<IChatProps> = (props) => {
-  const { username, newPin } = props;
+  const { username, newPin, sendMessage } = props;
 
   const [toggleMenu, setToggleMenu] = useState<boolean>(true);
 
@@ -63,7 +64,9 @@ const Chat: React.FC<IChatProps> = (props) => {
         <div id="dash" className="dashboard">
           <div className="userLogo"></div>
           <h1 className="nickname"> Welcome {username}!</h1>
-          <h3 className="roomDescription">Room ID: {newPin}</h3>
+          <h3 className="roomDescription">
+            Room ID: {window.localStorage.key(window.localStorage.length - 1)}
+          </h3>
           <div className="explanationDashboard">
             Share this number with your friends to invite them to the
             conversation.
@@ -107,7 +110,7 @@ const Chat: React.FC<IChatProps> = (props) => {
               </div>
             </div>
             <div className="buttonTextArea">
-              <button className="button btn">
+              <button className="button btn" onClick={() => sendMessage()}>
                 <svg className="svg-icon btn-svg" viewBox="0 0 20 20">
                   <path
                     fill="#fff"
