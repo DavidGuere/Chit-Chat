@@ -6,12 +6,14 @@ import CreateRoom from "../view/CreateRoom";
 import Chat from "../view/Chat";
 import SignUp from "../view/SignUp";
 import Login from "../view/Login";
+import ProtectedRoute from "../util/ProtectedRoute";
 
 import generatePinAsString from "../util/GeneratePinAsString";
 import saveToLocalStorage from "../util/SaveToLocalStorage";
 import getUserIDFromLocalStorage from "../util/GetUserIDFromLocalStorage";
 import getRoomIDFromLocalStorage from "../util/GetRoomIDFromLocalStorage";
-import * as Constants from "../util/Constants";
+import * as GraphQLQueries from "../util/Constants";
+import Auth from "../util/Auth";
 
 // export default function Controller() {
 const Controller: React.FC = () => {
@@ -40,26 +42,22 @@ const Controller: React.FC = () => {
         passRef.current.value !== "" &&
         passRef.current.value === passAgainRef.current.value
       ) {
-        // axios.defaults.headers.post["Content-Type"] =
-        //   "application/json;charset=utf-8";
-        // axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+        const saveUserQuery = GraphQLQueries.saveToFirestoreQuery(
+          usernameRef.current.value,
+          passRef.current.value
+        );
 
-        let userJSON = `{\"userId\":1,\"nickname\":\"${usernameRef.current.value}\",\"password\":\"${passRef.current.value}\",\"connected\":\"true\", \"chatRooms\":\"null\"}`;
-        const createQuery = Constants.saveToFirestoreQuery(userJSON);
-        const createQuery2 = Constants.loginUserQuery(7);
-        const createUserResult = await axios.post(Constants.GRAPHQL_API, {
-          query: createQuery2,
+        const saveUserResult = await axios.post(GraphQLQueries.GRAPHQL_API, {
+          query: saveUserQuery,
         });
-        const fetchResult = createUserResult.data.data;
-        console.log(fetchResult);
+        const newUserId = saveUserResult.data.data.saveToFirestore;
 
-        // fetch(Constants.GRAPHQL_API, {
-        //   method: "POST",
-        //   headers: { "Content-type": "application/json" },
-        //   body: JSON.stringify({
-        //     query: `query loginUser(userId: 7)`,
-        //   }),
-        // });
+        if (newUserId !== 0) {
+          sessionStorage.setItem("localUserId", newUserId);
+          history.push("/Chit-Chat/createRoom");
+        } else {
+          alert("The nickname is already in use :(");
+        }
       } else if (passRef.current.value !== passAgainRef.current.value) {
         alert("The password does not match");
       } else if (usernameRef.current.value === "") {
@@ -71,8 +69,43 @@ const Controller: React.FC = () => {
   }
 
   ///////////////////////////////////////////// Log in ////////////////////////////////
-  function logIn(): void {
-    history.push("/Chit-Chat/createRoom");
+  async function logIn() {
+    if (usernameRef.current && usernameRef && passRef.current && passRef) {
+      const loggedQuery = GraphQLQueries.loginUserQuery(
+        usernameRef.current.value,
+        passRef.current.value
+      );
+      const loggedResult = await axios.post(GraphQLQueries.GRAPHQL_API, {
+        query: loggedQuery,
+      });
+      const isUserLogged = loggedResult.data.data.loginUser;
+      if (isUserLogged) {
+        const loggedUserResult = await axios.post(GraphQLQueries.GRAPHQL_API, {
+          query: `query {getUserByName(userNick: "${usernameRef.current.value}"){
+              userId
+          }}`,
+        });
+        const loggedUserId = loggedUserResult.data.data.getUserByName.userId;
+        sessionStorage.setItem("localUserId", loggedUserId);
+        history.push("/Chit-Chat/createRoom");
+      } else {
+        alert("The nickname or the password is incorrect");
+      }
+    }
+  }
+
+  ///////////////////////////////////////////// Log in ////////////////////////////////
+  async function logOut() {
+    const userIdStr: string | null = sessionStorage.getItem("localUserId");
+    const userId: number | null =
+      userIdStr !== null ? parseInt(userIdStr) : null;
+
+    if (userId !== null) {
+      Auth.logout(userId).then(() => {
+        sessionStorage.setItem("localUserId", "");
+        history.push("/Chit-Chat/");
+      });
+    }
   }
   ///////////////////////////////////////////// Create room ////////////////////////////////
 
@@ -167,20 +200,21 @@ const Controller: React.FC = () => {
             passAgainRef={passAgainRef}
           />
         </Route>
-        <Route path="/Chit-Chat/createRoom">
+        <ProtectedRoute path="/Chit-Chat/createRoom">
           <CreateRoom
             generatePinFunc={generatePin}
+            logOutFunc={logOut}
             usernameRef={usernameRef}
             roomIDRef={roomIDRef}
           />
-        </Route>
-        <Route path="/Chit-Chat/chat">
+        </ProtectedRoute>
+        <ProtectedRoute path="/Chit-Chat/chat">
           <Chat
             username={nickname}
             newPin={newRoomId}
             sendMessage={sendMessage}
           />
-        </Route>
+        </ProtectedRoute>
       </Switch>
     </>
   );

@@ -3,12 +3,13 @@ import "./CreateRoom.css";
 
 interface IViewProps {
   generatePinFunc: () => void;
+  logOutFunc: () => void;
   usernameRef: any;
   roomIDRef: any;
 }
 
 const CreateRoom: React.FC<IViewProps> = (prop) => {
-  const { generatePinFunc, usernameRef, roomIDRef } = prop;
+  const { generatePinFunc, logOutFunc, usernameRef, roomIDRef } = prop;
 
   return (
     <>
@@ -40,6 +41,9 @@ const CreateRoom: React.FC<IViewProps> = (prop) => {
           </div>
         </div>
         <button className="button">Join room</button>
+        <button className="button" onClick={() => logOutFunc()}>
+          Log out
+        </button>
       </div>
     </>
   );
