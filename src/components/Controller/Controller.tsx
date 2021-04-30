@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Switch, Route, useHistory } from "react-router-dom";
 import axios from "axios";
 
@@ -9,25 +9,21 @@ import Login from "../view/Login";
 import ProtectedRoute from "../util/ProtectedRoute";
 
 import generatePinAsString from "../util/GeneratePinAsString";
-import saveToLocalStorage from "../util/SaveToLocalStorage";
-import getUserIDFromLocalStorage from "../util/GetUserIDFromLocalStorage";
-import getRoomIDFromLocalStorage from "../util/GetRoomIDFromLocalStorage";
 import * as GraphQLQueries from "../util/Constants";
 import Auth from "../util/Auth";
 
 const Controller: React.FC = () => {
-  const [newRoomId, setNewRoomId] = useState<string>("");
-  const [newUserId, setNewUserId] = useState<string>("");
+  const [currentUser, setCurrentUser] = useState<string>("");
+  const [currentRoom, setCurrentRoom] = useState<string>("");
+  const [messagess, setMessagess] = useState<any>([]);
+  const [websocket, setWebsocket] = useState<any>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
   const passRef = useRef<HTMLInputElement>(null);
   const passAgainRef = useRef<HTMLInputElement>(null);
   const roomIDRef = useRef<HTMLInputElement>(null);
-  const [currentUser, setCurrentUser] = useState<string>("");
-  const [currentRoom, setCurrentRoom] = useState<string>("");
-  const currentUserRef = useRef<string>("");
-  const currentRoomRef = useRef<string>("");
   const messageRef = useRef<HTMLInputElement>(null);
   const history = useHistory();
+  var messages: any = [];
 
   ///////////////////////////////////////////// Signing in ////////////////////////////////
 
@@ -106,6 +102,7 @@ const Controller: React.FC = () => {
     if (userId !== null) {
       Auth.logout(userId).then(() => {
         sessionStorage.setItem("localUserId", "");
+        sessionStorage.setItem("currentUser", "");
         history.push("/Chit-Chat/");
       });
     }
@@ -127,7 +124,6 @@ const Controller: React.FC = () => {
     const isRoomAvailable = loggedResult.data.data.isRoomIDAvailable;
 
     if (isRoomAvailable) {
-      setNewRoomId(roomId);
       const createRoomQuery = GraphQLQueries.createNewRoomQuery(roomId);
       const createRoomResult = await axios.post(GraphQLQueries.GRAPHQL_API, {
         query: createRoomQuery,
@@ -234,28 +230,57 @@ const Controller: React.FC = () => {
 
       sessionStorage.setItem("currentRoom", "");
       history.push("/Chit-Chat/createRoom");
+      websocket.close();
+      messages.length = 0;
     }
   }
 
   ///////////////////////////////////////////// Connection with WebSocket server ////////////////////////////////
 
-  var socket = new WebSocket("ws://localhost:9000");
+  function connectToWebsocket() {
+    console.log("oppening connection");
+
+    const socket = new WebSocket("ws://localhost:9000");
+    setWebsocket(socket);
+  }
 
   async function sendMessage() {
     if (messageRef && messageRef.current && messageRef.current.value !== "") {
-      console.log(messageRef.current.value);
-
       let payload = {
         roomId: sessionStorage.getItem("currentRoom"),
         messageId: "1",
         user: sessionStorage.getItem("currentUser"),
         message: messageRef.current.value,
+        source: "external",
       };
-      // socket.onopen = () =>
-      socket.send(JSON.stringify(payload));
+      websocket.send(JSON.stringify(payload));
 
-      socket.onmessage = (message: any) => console.log(message);
+      messageRef.current.value = "";
     }
+  }
+
+  if (websocket !== null) {
+    websocket.onmessage = (message: any) => {
+      const localRoom: string | null = sessionStorage.getItem("currentRoom");
+      const localUser: string | null = sessionStorage.getItem("currentUser");
+      var incomingMessage = JSON.parse(message.data);
+
+      if (localRoom !== null && localUser !== null) {
+        if (incomingMessage.roomId === localRoom) {
+          if (
+            incomingMessage.user === localUser ||
+            incomingMessage.user === "Chit-Chat"
+          ) {
+            incomingMessage.source = "local";
+          }
+          messages = [...messages, incomingMessage];
+          setMessagess([...messagess, incomingMessage]);
+        }
+      }
+      console.log(messages);
+    };
+
+    websocket.onclose = () => console.log("disconnected");
   }
 
   return (
@@ -281,19 +306,19 @@ const Controller: React.FC = () => {
             createRoomFunc={createRoom}
             joinRoomFunc={joinRoom}
             logOutFunc={logOut}
-            usernameRef={usernameRef}
             roomIDRef={roomIDRef}
+            connectToWebsocketFunc={connectToWebsocket}
           />
         </ProtectedRoute>
         <ProtectedRoute path="/Chit-Chat/chat">
           <Chat
             username={currentUser}
             roomId={currentRoom}
-            newPin={newRoomId}
             sendMessage={sendMessage}
             currentDataFunc={getCurrentUserData}
             leaveRoomFunc={leaveRoom}
             messageRef={messageRef}
+            messages={messagess}
           />
         </ProtectedRoute>
       </Switch>

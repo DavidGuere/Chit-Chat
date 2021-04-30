@@ -3,18 +3,18 @@ import "./CreateRoom.css";
 
 interface IViewProps {
   createRoomFunc: () => void;
+  connectToWebsocketFunc: () => void;
   logOutFunc: () => void;
   joinRoomFunc: () => void;
-  usernameRef: any;
   roomIDRef: any;
 }
 
 const CreateRoom: React.FC<IViewProps> = (prop) => {
   const {
     createRoomFunc,
+    connectToWebsocketFunc,
     logOutFunc,
     joinRoomFunc,
-    usernameRef,
     roomIDRef,
   } = prop;
 
@@ -27,7 +27,13 @@ const CreateRoom: React.FC<IViewProps> = (prop) => {
           Press "Create room" to create a new chatroom or enter a room Id press
           "Join room" to join a room.
         </div>
-        <button className="button" onClick={() => createRoomFunc()}>
+        <button
+          className="button"
+          onClick={() => {
+            createRoomFunc();
+            connectToWebsocketFunc();
+          }}
+        >
           Create room
         </button>
         <div className="inputFields">
@@ -47,7 +53,13 @@ const CreateRoom: React.FC<IViewProps> = (prop) => {
             />
           </div>
         </div>
-        <button className="button" onClick={() => joinRoomFunc()}>
+        <button
+          className="button"
+          onClick={() => {
+            joinRoomFunc();
+            connectToWebsocketFunc();
+          }}
+        >
           Join room
         </button>
         <button className="button" onClick={() => logOutFunc()}>

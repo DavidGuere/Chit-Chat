@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Chat.css";
 
 interface IChatProps {
   username: string;
   roomId: string;
-  newPin: string;
   messageRef: any;
   sendMessage: () => any;
   currentDataFunc: () => void;
+  messages: any;
   leaveRoomFunc: () => void;
 }
 
@@ -15,14 +15,18 @@ const Chat: React.FC<IChatProps> = (props) => {
   const {
     username,
     roomId,
-    newPin,
     messageRef,
     sendMessage,
     currentDataFunc,
+    messages,
     leaveRoomFunc,
   } = props;
 
   const [toggleMenu, setToggleMenu] = useState<boolean>(true);
+
+  console.log("rendering chat and printing messages:");
+
+  console.log(messages);
 
   const openCloseMobileMenu = (): void => {
     setToggleMenu(!toggleMenu);
@@ -55,6 +59,7 @@ const Chat: React.FC<IChatProps> = (props) => {
   };
 
   currentDataFunc();
+  useEffect(() => {}, [messages]);
 
   return (
     <>
@@ -90,6 +95,14 @@ const Chat: React.FC<IChatProps> = (props) => {
         </div>
         <div id="chat" className="chatSection">
           <div className="messages">
+            {messages.map((message: any) => {
+              return (
+                <div className={`message ${message.source}`}>
+                  <h4 className={`user ${message.source}`}> {message.user}</h4>
+                  <p className="text">{message.message}</p>
+                </div>
+              );
+            })}
             <div className="message local">
               <h4 className="user local"> local user name</h4>
               <p className="text">
