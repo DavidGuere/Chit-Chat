@@ -15,7 +15,6 @@ import getRoomIDFromLocalStorage from "../util/GetRoomIDFromLocalStorage";
 import * as GraphQLQueries from "../util/Constants";
 import Auth from "../util/Auth";
 
-// export default function Controller() {
 const Controller: React.FC = () => {
   const [newRoomId, setNewRoomId] = useState<string>("");
   const [newUserId, setNewUserId] = useState<string>("");
@@ -23,8 +22,12 @@ const Controller: React.FC = () => {
   const passRef = useRef<HTMLInputElement>(null);
   const passAgainRef = useRef<HTMLInputElement>(null);
   const roomIDRef = useRef<HTMLInputElement>(null);
+  const [currentUser, setCurrentUser] = useState<string>("");
+  const [currentRoom, setCurrentRoom] = useState<string>("");
+  const currentUserRef = useRef<string>("");
+  const currentRoomRef = useRef<string>("");
+  const messageRef = useRef<HTMLInputElement>(null);
   const history = useHistory();
-  var nickname: string = "";
 
   ///////////////////////////////////////////// Signing in ////////////////////////////////
 
@@ -94,7 +97,7 @@ const Controller: React.FC = () => {
     }
   }
 
-  ///////////////////////////////////////////// Log in ////////////////////////////////
+  ///////////////////////////////////////////// Log out ////////////////////////////////
   async function logOut() {
     const userIdStr: string | null = sessionStorage.getItem("localUserId");
     const userId: number | null =
@@ -109,77 +112,150 @@ const Controller: React.FC = () => {
   }
   ///////////////////////////////////////////// Create room ////////////////////////////////
 
-  const pinGenerator = generatePinAsString;
+  async function createRoom() {
+    const pinGenerator = generatePinAsString;
 
-  function generatePin() {
-    if (usernameRef.current && usernameRef && roomIDRef.current && roomIDRef) {
-      // create new room
-      if (usernameRef.current.value !== "" && roomIDRef.current.value === "") {
-        let roomId: string = pinGenerator(8);
-        let userId: string = pinGenerator(6);
+    let roomId: string = pinGenerator(8);
 
-        setNewRoomId(roomId);
-        setNewUserId(userId);
+    console.log(roomId);
 
-        saveToLocalStorage(roomId, userId, nickname);
+    const roomAvailableQuery = GraphQLQueries.isRoomIDAvailableQuery(roomId);
+    const loggedResult = await axios.post(GraphQLQueries.GRAPHQL_API, {
+      query: roomAvailableQuery,
+    });
 
+    const isRoomAvailable = loggedResult.data.data.isRoomIDAvailable;
+
+    if (isRoomAvailable) {
+      setNewRoomId(roomId);
+      const createRoomQuery = GraphQLQueries.createNewRoomQuery(roomId);
+      const createRoomResult = await axios.post(GraphQLQueries.GRAPHQL_API, {
+        query: createRoomQuery,
+      });
+
+      const userIdStr: string | null = sessionStorage.getItem("localUserId");
+      const userId: number | null =
+        userIdStr !== null ? parseInt(userIdStr) : null;
+
+      if (userId !== null) {
+        const saveRoomToUserQuery = GraphQLQueries.saveUserChatRoomToFirestoreQuery(
+          userId,
+          roomId
+        );
+        const saveRoomToUserResult = await axios.post(
+          GraphQLQueries.GRAPHQL_API,
+          {
+            query: saveRoomToUserQuery,
+          }
+        );
+
+        const setUserCurrentRoomQuery = GraphQLQueries.setUserCurrentRoomQuery(
+          userId,
+          roomId
+        );
+        const setUserCurrentRoomResult = await axios.post(
+          GraphQLQueries.GRAPHQL_API,
+          {
+            query: setUserCurrentRoomQuery,
+          }
+        );
         history.push("/Chit-Chat/chat");
       }
-      // Join as new member in chat
-      else if (
-        usernameRef.current.value !== "" &&
-        roomIDRef.current.value !== ""
-      ) {
-        let userId: string = pinGenerator(6);
+    } else {
+      createRoom();
+    }
+  }
 
-        setNewRoomId(roomIDRef.current.value);
-        setNewUserId(userId);
+  ///////////////////////////////////////////// Get current user data ////////////////////////////////
+  async function getCurrentUserData() {
+    const userIdStr: string | null = sessionStorage.getItem("localUserId");
+    const userId: number | null =
+      userIdStr !== null ? parseInt(userIdStr) : null;
 
-        saveToLocalStorage(newRoomId, newUserId, nickname);
-      }
-      // join to an existent conversation
-      else if (
-        usernameRef.current.value === "" &&
-        roomIDRef.current.value !== ""
+    const userDataResult = await axios.post(GraphQLQueries.GRAPHQL_API, {
+      query: `query{getUser(userId: ${userId}){
+              currentRoom,
+              nickname
+            }}`,
+    });
+
+    setCurrentRoom(userDataResult.data.data.getUser.currentRoom);
+    setCurrentUser(userDataResult.data.data.getUser.nickname);
+    sessionStorage.setItem("currentRoom", currentRoom);
+    sessionStorage.setItem("currentUser", currentUser);
+  }
+
+  ///////////////////////////////////////////// Join user to a room ////////////////////////////////
+  async function joinRoom() {
+    if (roomIDRef.current && roomIDRef) {
+      console.log(roomIDRef.current.value.length);
+      console.log(roomIDRef.current.value);
+
+      if (
+        roomIDRef.current.value !== "" &&
+        roomIDRef.current.value.length === 8
       ) {
-        let userId = getUserIDFromLocalStorage(roomIDRef.current.value);
+        const userIdStr: string | null = sessionStorage.getItem("localUserId");
+        const userId: number | null =
+          userIdStr !== null ? parseInt(userIdStr) : null;
 
         if (userId !== null) {
-          setNewRoomId(roomIDRef.current.value);
-          setNewUserId(userId);
-        } else {
-          alert("The room was not found, check the room ID :)");
+          const joinRoomQuery = GraphQLQueries.joinUserToRoomQuery(
+            userId,
+            roomIDRef.current.value
+          );
+          const joinRoomResult = await axios.post(GraphQLQueries.GRAPHQL_API, {
+            query: joinRoomQuery,
+          });
+
+          if (joinRoomResult.data.data.joinUserToRoom) {
+            history.push("/Chit-Chat/chat");
+          } else {
+            alert("The room does not exist");
+          }
         }
       } else {
-        alert(
-          "Enter only a nickname to create a new conversation. Enter a nickname and a room ID to join a conversation or enter just a room ID to rejoin a conversation"
-        );
+        alert("Enter a valid room Id (Only number and 8 digits)");
       }
     }
   }
 
-  if (usernameRef.current && usernameRef) {
-    nickname = usernameRef.current.value;
+  ///////////////////////////////////////////// Leave room ////////////////////////////////
+  async function leaveRoom() {
+    const userIdStr: string | null = sessionStorage.getItem("localUserId");
+    const userId: number | null =
+      userIdStr !== null ? parseInt(userIdStr) : null;
+
+    if (userId !== null) {
+      const leaveRoomQuery = GraphQLQueries.leaveCurrentRoomQuery(userId);
+      const leaveRoomResult = await axios.post(GraphQLQueries.GRAPHQL_API, {
+        query: leaveRoomQuery,
+      });
+
+      sessionStorage.setItem("currentRoom", "");
+      history.push("/Chit-Chat/createRoom");
+    }
   }
 
-  ///////////////////////////////////////////// Connection with server ////////////////////////////////
+  ///////////////////////////////////////////// Connection with WebSocket server ////////////////////////////////
 
   var socket = new WebSocket("ws://localhost:9000");
 
   async function sendMessage() {
-    console.log("trying to connect");
+    if (messageRef && messageRef.current && messageRef.current.value !== "") {
+      console.log(messageRef.current.value);
 
-    let payload = {
-      roomId: getRoomIDFromLocalStorage(newRoomId),
-      messageId: "1",
-      user: nickname,
-      userId: "123456",
-      message: "Hello world",
-    };
-    // socket.onopen = () =>
-    socket.send(JSON.stringify(payload));
+      let payload = {
+        roomId: sessionStorage.getItem("currentRoom"),
+        messageId: "1",
+        user: sessionStorage.getItem("currentUser"),
+        message: messageRef.current.value,
+      };
+      // socket.onopen = () =>
+      socket.send(JSON.stringify(payload));
 
-    socket.onmessage = (message: any) => console.log(message);
+      socket.onmessage = (message: any) => console.log(message);
+    }
   }
 
   return (
@@ -202,7 +278,8 @@ const Controller: React.FC = () => {
         </Route>
         <ProtectedRoute path="/Chit-Chat/createRoom">
           <CreateRoom
-            generatePinFunc={generatePin}
+            createRoomFunc={createRoom}
+            joinRoomFunc={joinRoom}
             logOutFunc={logOut}
             usernameRef={usernameRef}
             roomIDRef={roomIDRef}
@@ -210,9 +287,13 @@ const Controller: React.FC = () => {
         </ProtectedRoute>
         <ProtectedRoute path="/Chit-Chat/chat">
           <Chat
-            username={nickname}
+            username={currentUser}
+            roomId={currentRoom}
             newPin={newRoomId}
             sendMessage={sendMessage}
+            currentDataFunc={getCurrentUserData}
+            leaveRoomFunc={leaveRoom}
+            messageRef={messageRef}
           />
         </ProtectedRoute>
       </Switch>

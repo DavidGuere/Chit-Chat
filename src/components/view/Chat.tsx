@@ -3,12 +3,24 @@ import "./Chat.css";
 
 interface IChatProps {
   username: string;
+  roomId: string;
   newPin: string;
+  messageRef: any;
   sendMessage: () => any;
+  currentDataFunc: () => void;
+  leaveRoomFunc: () => void;
 }
 
 const Chat: React.FC<IChatProps> = (props) => {
-  const { username, newPin, sendMessage } = props;
+  const {
+    username,
+    roomId,
+    newPin,
+    messageRef,
+    sendMessage,
+    currentDataFunc,
+    leaveRoomFunc,
+  } = props;
 
   const [toggleMenu, setToggleMenu] = useState<boolean>(true);
 
@@ -41,6 +53,9 @@ const Chat: React.FC<IChatProps> = (props) => {
       }
     }
   };
+
+  currentDataFunc();
+
   return (
     <>
       <section className="glass">
@@ -64,14 +79,14 @@ const Chat: React.FC<IChatProps> = (props) => {
         <div id="dash" className="dashboard">
           <div className="userLogo"></div>
           <h1 className="nickname"> Welcome {username}!</h1>
-          <h3 className="roomDescription">
-            Room ID: {window.localStorage.key(window.localStorage.length - 1)}
-          </h3>
+          <h3 className="roomDescription">Room ID: {roomId}</h3>
           <div className="explanationDashboard">
             Share this number with your friends to invite them to the
             conversation.
           </div>
-          <button className="button">Disconnect</button>
+          <button className="button" onClick={() => leaveRoomFunc()}>
+            Leave room
+          </button>
         </div>
         <div id="chat" className="chatSection">
           <div className="messages">
@@ -106,6 +121,7 @@ const Chat: React.FC<IChatProps> = (props) => {
                 <textarea
                   className="userInput userInputTextArea"
                   placeholder="Write your message here :)"
+                  ref={messageRef}
                 />
               </div>
             </div>

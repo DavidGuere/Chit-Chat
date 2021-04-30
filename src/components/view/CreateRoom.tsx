@@ -2,14 +2,21 @@ import React from "react";
 import "./CreateRoom.css";
 
 interface IViewProps {
-  generatePinFunc: () => void;
+  createRoomFunc: () => void;
   logOutFunc: () => void;
+  joinRoomFunc: () => void;
   usernameRef: any;
   roomIDRef: any;
 }
 
 const CreateRoom: React.FC<IViewProps> = (prop) => {
-  const { generatePinFunc, logOutFunc, usernameRef, roomIDRef } = prop;
+  const {
+    createRoomFunc,
+    logOutFunc,
+    joinRoomFunc,
+    usernameRef,
+    roomIDRef,
+  } = prop;
 
   return (
     <>
@@ -20,7 +27,7 @@ const CreateRoom: React.FC<IViewProps> = (prop) => {
           Press "Create room" to create a new chatroom or enter a room Id press
           "Join room" to join a room.
         </div>
-        <button className="button" onClick={() => generatePinFunc()}>
+        <button className="button" onClick={() => createRoomFunc()}>
           Create room
         </button>
         <div className="inputFields">
@@ -40,7 +47,9 @@ const CreateRoom: React.FC<IViewProps> = (prop) => {
             />
           </div>
         </div>
-        <button className="button">Join room</button>
+        <button className="button" onClick={() => joinRoomFunc()}>
+          Join room
+        </button>
         <button className="button" onClick={() => logOutFunc()}>
           Log out
         </button>

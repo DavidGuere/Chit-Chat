@@ -6,21 +6,21 @@ export function saveToFirestoreQuery(
   password: String
 ): string {
   //   return `query {saveToFirestore(newUser: "${userJSON}")}`;
-  return `query {saveToFirestore(newUser: "{\\"userId\\":1,\\"nickname\\":\\"${nickname}\\",\\"password\\":\\"${password}\\",\\"connected\\":true, \\"chatRooms\\":null}")}`;
+  return `query {saveToFirestore(newUser: "{\\"userId\\":1,\\"nickname\\":\\"${nickname}\\",\\"password\\":\\"${password}\\",\\"connected\\":true, \\"chatRooms\\":null, \\"currentRoom\\":null}")}`;
 }
 
 export function saveUserChatRoomToFirestoreQuery(
   userId: number,
-  roomId: number
+  roomId: string
 ): string {
-  return `query {saveUserChatRoomToFirestore(userId: ${userId}, roomId: ${roomId})}`;
+  return `query {saveUserChatRoomToFirestore(userId: ${userId}, roomId: "${roomId}")}`;
 }
 
 export function removeUserChatRoomFromFirebaseQuery(
   userId: number,
-  roomId: number
+  roomId: string
 ): string {
-  return `query {removeUserChatRoomFromFirebase(userId: ${userId}, roomId: ${roomId})}`;
+  return `query {removeUserChatRoomFromFirebase(userId: ${userId}, roomId: "${roomId}")}`;
 }
 
 export function loginUserQuery(nickname: string, password: string): string {
@@ -37,4 +37,19 @@ export function isRoomIDAvailableQuery(roomId: string): string {
 
 export function createNewRoomQuery(roomId: string): string {
   return `query {createNewRoom(roomId: "${roomId}")}`;
+}
+
+export function setUserCurrentRoomQuery(
+  userId: number,
+  roomId: string
+): string {
+  return `query {setUserCurrentRoom(userId: ${userId}, roomId: "${roomId}")}`;
+}
+
+export function joinUserToRoomQuery(userId: number, roomId: string) {
+  return `query {joinUserToRoom(userId: ${userId}, roomId: "${roomId}")}`;
+}
+
+export function leaveCurrentRoomQuery(userId: number): String {
+  return `query {leaveCurrentRoom(userId: ${userId})}`;
 }
