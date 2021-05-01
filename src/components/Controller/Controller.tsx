@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Switch, Route, useHistory } from "react-router-dom";
 import axios from "axios";
 
@@ -25,7 +25,7 @@ const Controller: React.FC = () => {
   const history = useHistory();
   var messages: any = [];
 
-  ///////////////////////////////////////////// Signing in ////////////////////////////////
+  ///////////////////////////////////////////// Create new account ////////////////////////////////
 
   async function signUp() {
     if (
@@ -114,8 +114,6 @@ const Controller: React.FC = () => {
 
     let roomId: string = pinGenerator(8);
 
-    console.log(roomId);
-
     const roomAvailableQuery = GraphQLQueries.isRoomIDAvailableQuery(roomId);
     const loggedResult = await axios.post(GraphQLQueries.GRAPHQL_API, {
       query: roomAvailableQuery,
@@ -181,12 +179,9 @@ const Controller: React.FC = () => {
     sessionStorage.setItem("currentUser", currentUser);
   }
 
-  ///////////////////////////////////////////// Join user to a room ////////////////////////////////
+  ///////////////////////////////////////////// Join a room ////////////////////////////////
   async function joinRoom() {
     if (roomIDRef.current && roomIDRef) {
-      console.log(roomIDRef.current.value.length);
-      console.log(roomIDRef.current.value);
-
       if (
         roomIDRef.current.value !== "" &&
         roomIDRef.current.value.length === 8
@@ -238,11 +233,11 @@ const Controller: React.FC = () => {
   ///////////////////////////////////////////// Connection with WebSocket server ////////////////////////////////
 
   function connectToWebsocket() {
-    console.log("oppening connection");
-
     const socket = new WebSocket("ws://localhost:9000");
     setWebsocket(socket);
   }
+
+  ///////////////////////////////////////////// handling messages ////////////////////////////////
 
   async function sendMessage() {
     if (messageRef && messageRef.current && messageRef.current.value !== "") {
@@ -259,7 +254,34 @@ const Controller: React.FC = () => {
     }
   }
 
+  // async function getLastMessages() {
+  //   const localRoom: string | null = sessionStorage.getItem("currentRoom");
+  //   const localUser: string | null = sessionStorage.getItem("currentUser");
+  //   if (localRoom !== null) {
+  //     const lastMessagesQuery = GraphQLQueries.getLastMessagesQuery(localRoom);
+  //     const lastMessagesResult = await axios.post(GraphQLQueries.GRAPHQL_API, {
+  //       query: lastMessagesQuery,
+  //     });
+
+  //     console.log("getting last messages");
+
+  //     console.log(lastMessagesResult.data.data.getLastMessages);
+
+  //     const lastMessages = lastMessagesResult.data.data.getLastMessages;
+  //     lastMessages.map((message: any) => {
+  //       if (message.user === localUser || message.user === "Chit-Chat") {
+  //         message.source = "local";
+  //       }
+  //       messages = [...messages, message];
+  //     });
+
+  //     console.log(messages);
+  //   }
+  // }
+
   if (websocket !== null) {
+    // getLastMessages();
+
     websocket.onmessage = (message: any) => {
       const localRoom: string | null = sessionStorage.getItem("currentRoom");
       const localUser: string | null = sessionStorage.getItem("currentUser");
@@ -277,10 +299,7 @@ const Controller: React.FC = () => {
           setMessagess([...messagess, incomingMessage]);
         }
       }
-      console.log(messages);
     };
-
-    websocket.onclose = () => console.log("disconnected");
   }
 
   return (

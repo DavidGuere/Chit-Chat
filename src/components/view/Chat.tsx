@@ -24,10 +24,6 @@ const Chat: React.FC<IChatProps> = (props) => {
 
   const [toggleMenu, setToggleMenu] = useState<boolean>(true);
 
-  console.log("rendering chat and printing messages:");
-
-  console.log(messages);
-
   const openCloseMobileMenu = (): void => {
     setToggleMenu(!toggleMenu);
     const getDash = document.getElementById("dash");
@@ -103,30 +99,6 @@ const Chat: React.FC<IChatProps> = (props) => {
                 </div>
               );
             })}
-            <div className="message local">
-              <h4 className="user local"> local user name</h4>
-              <p className="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fuga
-                tempora inventore, vero exercitationem corporis adipisci quia
-                officia molestias at reiciendis impedit laborum quo commodi quae
-                nostrum nam asperiores esse quaerat.
-                sssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-              </p>
-            </div>
-            <div className="message">
-              <h4 className="user"> external user name</h4>
-              <p className="text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Accusantium vitae dolorem, odio voluptates quo
-                miaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaanus sequi, enim
-                explicabo repellendus tempore perferendis et consequuntur
-                inventore nemo hic veritatis placeat voluptate distinctio! Lorem
-                ipsum dolor sit amet consectetur adipisicing elit. Repellendus
-                repellat mollitia atque et dolore dicta aut numquam ducimus odit
-                quam blanditiis, voluptatibus hic placeat esse amet? Quae sequi
-                dolore voluptate.
-              </p>
-            </div>
           </div>
           <div className="textArea">
             <div className="inputFields inputFieldsTextArea">

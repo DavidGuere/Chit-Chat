@@ -1,11 +1,10 @@
-// export const GRAPHQL_API = "https://chit-chatdegg.herokuapp.com/graphql";
-export const GRAPHQL_API = "http://localhost:8080/graphql";
+export const GRAPHQL_API = "https://chit-chatdegg.herokuapp.com/graphql";
+// export const GRAPHQL_API = "http://localhost:8080/graphql";
 
 export function saveToFirestoreQuery(
   nickname: String,
   password: String
 ): string {
-  //   return `query {saveToFirestore(newUser: "${userJSON}")}`;
   return `query {saveToFirestore(newUser: "{\\"userId\\":1,\\"nickname\\":\\"${nickname}\\",\\"password\\":\\"${password}\\",\\"connected\\":true, \\"chatRooms\\":null, \\"currentRoom\\":null}")}`;
 }
 
@@ -52,4 +51,14 @@ export function joinUserToRoomQuery(userId: number, roomId: string) {
 
 export function leaveCurrentRoomQuery(userId: number): String {
   return `query {leaveCurrentRoom(userId: ${userId})}`;
+}
+
+export function getLastMessagesQuery(roomId: String): String {
+  return `query {getLastMessages(roomId: "${roomId}"){
+    roomId,
+    messageId,
+    user,
+    message,
+    source
+  }}`;
 }
