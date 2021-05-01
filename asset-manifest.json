@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/Chit-Chat/static/css/main.cca7fb37.chunk.css",
-    "main.js": "/Chit-Chat/static/js/main.ce7ec6ce.chunk.js",
-    "main.js.map": "/Chit-Chat/static/js/main.ce7ec6ce.chunk.js.map",
+    "main.js": "/Chit-Chat/static/js/main.41c7686e.chunk.js",
+    "main.js.map": "/Chit-Chat/static/js/main.41c7686e.chunk.js.map",
     "runtime-main.js": "/Chit-Chat/static/js/runtime-main.a3447ea1.js",
     "runtime-main.js.map": "/Chit-Chat/static/js/runtime-main.a3447ea1.js.map",
     "static/js/2.51ecdf6c.chunk.js": "/Chit-Chat/static/js/2.51ecdf6c.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.a3447ea1.js",
     "static/js/2.51ecdf6c.chunk.js",
     "static/css/main.cca7fb37.chunk.css",
-    "static/js/main.ce7ec6ce.chunk.js"
+    "static/js/main.41c7686e.chunk.js"
   ]
 }
