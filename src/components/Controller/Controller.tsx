@@ -234,7 +234,7 @@ const Controller: React.FC = () => {
 
   function connectToWebsocket() {
     // const socket = new WebSocket("ws://localhost:9000");
-    const socket = new WebSocket("wss://chit-chatdegg.herokuapp.com/");
+    const socket = new WebSocket("ws://chit-chatdegg.herokuapp.com/");
     setWebsocket(socket);
   }
 
